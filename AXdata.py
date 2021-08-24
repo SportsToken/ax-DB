@@ -1,23 +1,16 @@
 import requests
 from requests import api
-from Player_class import *
+from Athlete_functions import *
 from Athlete_mongo import *
+from datetime import date
 
-def Create_athlete(name): # create a new athlete in db
-
-    response = requests.get(PLAYER_URL, headers=HEADER)  # pull sports data from api
-
-    if response.status_code != 200:  # proper response from api connection
-        print('Error')
-
-    for athlete in response.json():  # parse each athlete
-        if athlete['Name'] == name:  # if athlete name in list of tracked MLB_athletes
-
-            collection.insert_one(
-                {"_id": athlete['PlayerID']}, 
-                {"_name": athlete['Name']}, 
-                {"_hist": []}
-            )
+def Create_athlete(athlete_data): # create a new athlete in db
+    print(athlete_data)
+    collection.insert_one({
+        "_id": athlete_data['PlayerID'], 
+        "_name": athlete_data['Name'], 
+        "_hist": []
+        })
 
 def Update_historical_WAR(_id, time, WAR): # add historical time/price pair to each athlete data
 
@@ -28,4 +21,4 @@ def Update_historical_WAR(_id, time, WAR): # add historical time/price pair to e
         }
     )
 
-    
+

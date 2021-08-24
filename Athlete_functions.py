@@ -1,13 +1,13 @@
-import requests
 import json
-header = {'Ocp-Apim-Subscription-Key': '22c8f467077d4ff2a14c5b69e2355343'}
+import requests
+from datetime import date
+from Athlete_mongo import *
+from AXdata import *
 
+DATA = None
 
-def Get_league_averages():
-    url = 'https://api.sportsdata.io/v3/mlb/stats/json/PlayerSeasonStats/{"2021"}'
-    header = {'Ocp-Apim-Subscription-Key': '22c8f467077d4ff2a14c5b69e2355343'}
-
-    response = requests.get(url, headers=header)
+def Get_league_averages(): # get league average stats
+    response = requests.get(PLAYER_URL, headers=HEADER)
 
     LgOnBattingAverage = 0
     LgStolenBases = 0
@@ -48,9 +48,8 @@ def Get_league_averages():
           LgIntentionalWalks,
           LgPlateAppearances)
 
-def Get_MLB_averages():
-    url = 'https://api.sportsdata.io/v3/mlb/scores/json/TeamSeasonStats/{"2021"}'
-    response = requests.get(url, headers=header)
+def Get_MLB_averages(): # get MLB season stats
+    response = requests.get(LEAGUE_URL, headers=HEADER)
 
     MLBRunsScored = 0
     MLBInningsPitched = 0
@@ -66,31 +65,35 @@ def Get_MLB_averages():
 
     return (MLBRunsScored, MLBInningsPitched, MLBGames)
 
+def Pull_new_data(): # pull new data from SportsData.io
 
-def Get_athlete_data():
+    response = requests.get(PLAYER_URL, headers=HEADER)
 
-        url = 'https://api.sportsdata.io/v3/mlb/stats/json/PlayerSeasonStats/{"2021"}'
-        response = requests.get(url, headers=header)
+    DATA = response.json()
 
-        for athlete in response.json():
-            if athlete['Name'] == name:
-                data = athlete
+    return DATA
 
-def Get_WAR():
+def Get_athlete_data(DATA, _name): # extract data by athlete name passed
 
-    self.Get_athlete_data()
+    for athlete in DATA:
+        if athlete['Name'] == _name:
+            return athlete
 
-    onBasePercentage = self.data['OnBasePercentage']
-    pitchingPlateAppearances = self.data['PitchingPlateAppearances']
-    stolenBases = self.data['StolenBases']
-    caughtStealing = self.data['CaughtStealing']
-    runs = self.data['Runs']
-    outs = self.data['Outs']
-    singles = self.data['Singles']
-    walks = self.data['Walks']
-    hitByPitch = self.data['HitByPitch']
-    intentionalWalks = self.data['IntentionalWalks']
-    plateAppearances = self.data['PlateAppearances']
+def Get_WAR(DATA, _name) -> int: # calculate WAR
+
+    data = Get_athlete_data(DATA, _name)
+
+    onBasePercentage = data['OnBasePercentage']
+    pitchingPlateAppearances = data['PitchingPlateAppearances']
+    stolenBases = data['StolenBases']
+    caughtStealing = data['CaughtStealing']
+    runs = data['Runs']
+    outs = data['Outs']
+    singles = data['Singles']
+    walks = data['Walks']
+    hitByPitch = data['HitByPitch']
+    intentionalWalks = data['IntentionalWalks']
+    plateAppearances = data['PlateAppearances']
     runsCaughtStealing = 2 * (runs / outs) + 0.075
 
     LgOnBattingAverage, LgStolenBases, LgCaughtStealing, LgSingles, LgWalks, LgHitByPitch, LgIntentionalWalks, LgPlateAppearances = Get_league_averages()
@@ -107,5 +110,4 @@ def Get_WAR():
     RAR = (battingRuns + baseRunningRuns)/RLR
     WAR = RAR/RPW
 
-    print(WAR)
-    
+    return WAR

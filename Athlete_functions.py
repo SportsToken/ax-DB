@@ -81,19 +81,17 @@ def Get_athlete_data(DATA, _name): # extract data by athlete name passed
 
 def Get_WAR(DATA, _name) -> int: # calculate WAR
 
-    data = Get_athlete_data(DATA, _name)
-
-    onBasePercentage = data['OnBasePercentage']
-    pitchingPlateAppearances = data['PitchingPlateAppearances']
-    stolenBases = data['StolenBases']
-    caughtStealing = data['CaughtStealing']
-    runs = data['Runs']
-    outs = data['Outs']
-    singles = data['Singles']
-    walks = data['Walks']
-    hitByPitch = data['HitByPitch']
-    intentionalWalks = data['IntentionalWalks']
-    plateAppearances = data['PlateAppearances']
+    onBasePercentage = DATA['OnBasePercentage']
+    pitchingPlateAppearances = DATA['PitchingPlateAppearances']
+    stolenBases = DATA['StolenBases']
+    caughtStealing = DATA['CaughtStealing']
+    runs = DATA['Runs']
+    outs = DATA['Outs']
+    singles = DATA['Singles']
+    walks = DATA['Walks']
+    hitByPitch = DATA['HitByPitch']
+    intentionalWalks = DATA['IntentionalWalks']
+    plateAppearances = DATA['PlateAppearances']
     runsCaughtStealing = 2 * (runs / outs) + 0.075
 
     LgOnBattingAverage, LgStolenBases, LgCaughtStealing, LgSingles, LgWalks, LgHitByPitch, LgIntentionalWalks, LgPlateAppearances = Get_league_averages()

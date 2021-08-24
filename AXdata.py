@@ -12,10 +12,10 @@ def Create_athlete(athlete_data): # create a new athlete in db
         "_hist": []
         })
 
-def Update_historical_WAR(_id, time, WAR): # add historical time/price pair to each athlete data
-
+def Update_historical_WAR(name, time, WAR): # add historical time/price pair to each athlete data
+    
     collection.update_one(
-        {"_id":_id},
+        {"name":name},
         {"$push": 
             {"_hist": {time:WAR} }
         }

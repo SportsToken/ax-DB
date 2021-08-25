@@ -6,8 +6,7 @@ MongoDB Database Connection
 '''
 
 # get client
-cluster = MongoClient(
-    "mongodb+srv://AXMarkets:B7axmarkets&j64!@axmarkets.1hesm.mongodb.net/AXMarkets?retryWrites=true&w=majority")
+cluster = MongoClient("mongodb+srv://AXMarkets:B7axmarkets&j64!@axmarkets.1hesm.mongodb.net/AXAthletes?retryWrites=true&w=majority")
 # get db
 db = cluster['AXMarkets']
 # get collection

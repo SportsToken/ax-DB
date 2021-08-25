@@ -79,7 +79,7 @@ def Get_athlete_data(DATA, _name): # extract data by athlete name passed
         if athlete['Name'] == _name:
             return athlete
 
-def Get_WAR(DATA, _name) -> int: # calculate WAR
+def Get_WAR(DATA): # calculate WAR
 
     onBasePercentage = DATA['OnBasePercentage']
     pitchingPlateAppearances = DATA['PitchingPlateAppearances']

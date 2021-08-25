@@ -1,7 +1,17 @@
 const express = require("express");
-const cors = require("cors");
-
 const app = express();
+const mongoose = require("mongoose");
+const cors = require("cors");
+const fetch = require("node-fetch");
+
+//Creating DB connection and logging
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
+mongoose.connection.on("error", (err) => console.log(err));
+mongoose.connection.on("open", () => console.log("Connected to Database"));
 
 var corsOptions = {
   origin: "http://localhost:8081",

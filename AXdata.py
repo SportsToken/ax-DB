@@ -4,21 +4,17 @@ from Athlete_functions import *
 from Athlete_mongo import *
 from datetime import date
 
-def Create_athlete(athlete_data): # create a new athlete in db
+def Create_athlete(db, athlete_data): # create a new athlete in db
     
-    collection.insert_one({
-        "_id": athlete_data['PlayerID'], 
-        "_name": athlete_data['Name'], 
+    db.child('MLB').child(athlete_data["PlayerID"]).set({
+        "_name": athlete_data['Name'],
         "_hist": []
         })
 
-def Update_historical_WAR(_id, time, WAR): # add historical time/price pair to each athlete data
+def Update_historical_WAR(db, _id, name, time, WAR): # add historical time/price pair to each athlete data
     
-    collection.update_one(
-        {"_id":_id},
-        {"$push": 
-            {"_hist": {time:WAR}}
-        }
-    )
+    db.child('MLB').child(_id).child("_hist").update({
+        time:float(WAR)
+    })
 
 

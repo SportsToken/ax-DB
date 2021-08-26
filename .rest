@@ -1,1 +1,1 @@
-GET http://localhost:27017/getAll
+GET https://athletex-18727-default-rtdb.firebaseio.com/MLB'

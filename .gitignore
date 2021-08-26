@@ -1,3 +1,5 @@
 .env
 node_modules
 Athlete_mongo.py
+.rest
+__pycache__

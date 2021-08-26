@@ -1,1 +1,0 @@
-GET https://athletex-18727-default-rtdb.firebaseio.com/MLB'

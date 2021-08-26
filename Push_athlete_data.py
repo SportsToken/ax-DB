@@ -20,11 +20,13 @@ sock.connect((HOST, PORT))
 for athlete in MLB_athlete_list:
     athlete_data = Get_athlete_data(DATA, athlete)
     _id = athlete_data['PlayerID']
-    _name = athlete_data['Name']
 
     WAR = Get_WAR(athlete_data)
+    WAR = float(WAR*1000000)
+
+    string = f'mlb,id={_id} value={WAR}\n'
+
     # Send WAR Stats
-    sock.sendall(('Amlb,name={_name},playerID={_id} war={WAR}').encode())
-    # Update_historical_WAR(db, _id, _name, time, WAR)
+    sock.sendall((string).encode())
 
 sock.close()

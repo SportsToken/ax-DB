@@ -21,10 +21,11 @@ for athlete in MLB_athlete_list:
     athlete_data = Get_athlete_data(DATA, athlete)
     _id = athlete_data['PlayerID']
     name = athlete_data['Name']
-    name = name.replace(' ', '')
+    name = name.replace(' ', '_')
+    name = name + ('_' + str(_id))
 
     WAR = Get_WAR_MLB(athlete_data)
-    WAR = float(WAR*1000000)
+    WAR = float(WAR*2000000)
 
     string = f'mlb,name={name} value={WAR}\n'
 

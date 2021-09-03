@@ -1,7 +1,4 @@
-import requests
-from requests import api
 from Athlete_functions import *
-from datetime import date
 
 HEADER = {'Ocp-Apim-Subscription-Key': '22c8f467077d4ff2a14c5b69e2355343'}
 PLAYER_URL = 'https://api.sportsdata.io/v3/mlb/stats/json/PlayerSeasonStats/%7B%222021%22%7D'

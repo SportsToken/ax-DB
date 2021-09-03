@@ -18,8 +18,7 @@ PORT - port access number for QuestDB
 '''
 
 HEADER = {'Ocp-Apim-Subscription-Key': 'ee86ff4dcb8a4a54a4a6e280733eb5b7'}
-PLAYER_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/{SEASON}'
-SEASON = 2020
+PLAYER_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2020'
 HOST = 'localhost'
 PORT = 9009
 
@@ -35,7 +34,7 @@ def Get_athlete_data(DATA, _name): # extract data by athlete name passed
 
 def Get_NFL_price(athlete_data): # get WAR price for given athlete data
     TFP = athlete_data['FantasyPoints'] / ((athlete_data['OffensiveSnapsPlayed']) or athlete_data['DefensiveSnapsPlayed'])
-    print(TFP)
+    return TFP
 
 def Get_NFL_list(): # get usable list of NFL athletes
     NFL_ATHLETES = []
@@ -44,7 +43,7 @@ def Get_NFL_list(): # get usable list of NFL athletes
             NFL_ATHLETES.append(line[:-1])
     return NFL_ATHLETES
 
-NFL_ATHLETES = Get_NFL_list # pull active nfl athlete names and store in list
+NFL_ATHLETES = Get_NFL_list() # pull active nfl athlete names and store in list
 NFL_DATA = Get_NFL_data() # Get all NFL athletes data
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -52,17 +51,22 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
 sock.connect((HOST, PORT)) # connect to socket
 
 for athlete in NFL_ATHLETES: # loop through list of available athletes 
-    
     try: # try/except case needed to bypass athletes that dont exist in current seasons
         athlete_data = Get_athlete_data(NFL_DATA, athlete)
         _id = athlete_data['PlayerID']
-        name = athlete_data['Name'].replace(' ', '_')
+        name = athlete_data['Name']
+        name = name.replace(' ', '_')
         name = name + ('_' + str(_id))
         WAR = Get_NFL_price(athlete_data)
-
+        
         # Send WAR Stats
-        string = f'mlb,name={name} value={WAR}\n'
-        sock.sendall((string).encode())
+        string = f'nfl,name={name} value={WAR}\n'
+
+        try: # find potential errors
+            sock.sendall((string).encode())
+        except socket.error as e:
+            print("Got error: %s" % (e))
+
     except: # print names of athletes not available
         print(athlete)
 

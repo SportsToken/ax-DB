@@ -19,7 +19,7 @@ PORT - port access number for QuestDB
 
 HEADER = {'Ocp-Apim-Subscription-Key': 'ee86ff4dcb8a4a54a4a6e280733eb5b7'}
 PLAYER_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2020'
-HOST = 'localhost'
+HOST = '146.59.10.118'
 PORT = 9009
 
 def Get_NFL_data(): # pull new data from SportsData.io

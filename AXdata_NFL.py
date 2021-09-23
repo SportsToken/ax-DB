@@ -17,57 +17,28 @@ PORT - port access number for QuestDB
 (function) Get_NFL_list - Function to extract all needed athletes from appropriate txt file
 '''
 
-HEADER = {'Ocp-Apim-Subscription-Key': 'ee86ff4dcb8a4a54a4a6e280733eb5b7'}
+HEADER = {'Ocp-Apim-Subscription-Key': 'd50772ff30a14c91b08b1f7b7f59de5d'}
 PLAYER_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2020'
-HOST = 'localhost'
+IS_PLAYING_URL = 'https://api.sportsdata.io/v3/nfl/scores/json/AreAnyGamesInProgress'
+HOST = '146.59.10.118'
 PORT = 9009
 
-def Get_NFL_data(): # pull new data from SportsData.io
-    response = requests.get(PLAYER_URL, headers=HEADER)
-    DATA = response.json()
-    return DATA
-
-def Get_athlete_data(DATA, _name): # extract data by athlete name passed
-    for athlete_data in DATA:
-        if athlete_data['Name'] == _name:
-            return athlete_data
-
-def Get_NFL_price(athlete_data): # get WAR price for given athlete data
-    TFP = athlete_data['FantasyPoints'] / ((athlete_data['OffensiveSnapsPlayed']) or athlete_data['DefensiveSnapsPlayed'])
-    return TFP
-
-def Get_NFL_list(): # get usable list of NFL athletes
-    NFL_ATHLETES = []
-    with open('nfl_list.txt', 'r') as file:
-        for line in file:
-            NFL_ATHLETES.append(line[:-1])
-    return NFL_ATHLETES
-
-NFL_ATHLETES = Get_NFL_list() # pull active nfl athlete names and store in list
-NFL_DATA = Get_NFL_data() # Get all NFL athletes data
-
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
-
 sock.connect((HOST, PORT)) # connect to socket
 
-for athlete in NFL_ATHLETES: # loop through list of available athletes 
-    try: # try/except case needed to bypass athletes that dont exist in current seasons
-        athlete_data = Get_athlete_data(NFL_DATA, athlete)
-        _id = athlete_data['PlayerID']
-        name = athlete_data['Name']
-        name = name.replace(' ', '_')
-        name = name + ('_' + str(_id))
-        WAR = Get_NFL_price(athlete_data)
-        
-        # Send WAR Stats
-        string = f'nfl,name={name} value={WAR}\n'
+def main():
+    response = requests.get(IS_PLAYING_URL, headers=HEADER)
+    if response.json() == False:
+        all_athlete_data = requests.get(PLAYER_URL, headers=HEADER).json()
+        for athlete in all_athlete_data:
+            id, name, fp = athlete['PlayerID'], athlete['Name'].replace(' ', '_'), (athlete['FantasyPoints'] / ((athlete['OffensiveSnapsPlayed']) or athlete['DefensiveSnapsPlayed'] or 1))
 
-        try: # find potential errors
-            sock.sendall((string).encode())
-        except socket.error as e:
-            print("Got error: %s" % (e))
-
-    except: # print names of athletes not available
-        print(athlete)
+            string = f'nfl,name={name} war={fp}\n'
+            try: # find potential errors
+                sock.sendall((string).encode())
+            except socket.error as e:
+                print("Got error: %s" % (e))
 
 sock.close() # close socket
+
+main()

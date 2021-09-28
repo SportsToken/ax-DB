@@ -3,15 +3,22 @@ import requests
 import json
 
 # Constants
-HEADER = ''
-SDIO_URL = ''
-HOST = ''
-PORT = ''
+HEADER = {'Ocp-Apim-Subscription-Key': '**PRIVATE-KEY**'}
+SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2020'
+HOST = '146.59.10.118'
+PORT = '9009'
 
 def getData():
-        response = requests.get(SDIO_URL, headers=HEADER)
-        theData = response.json()
-        return theData
+    response = requests.get(SDIO_URL, headers=HEADER)
+    print(response)
+    theData = response.json()
+    print(theData)
+    return theData
+
+def priceCalculation(athlete_data):
+        # Football Athletes
+        computedAmericanFootballPrice = athlete_data['FantasyPoints'] / ((athlete_data['OffensiveSnapsPlayed']) or athlete_data['DefensiveSnapsPlayed'])
+        return computedAmericanFootballPrice
 
 def run():
     # Define the socket
@@ -25,7 +32,7 @@ def run():
         print("Got error: %s" % (e))
 
     except: # print names of athletes not available
-        print(athlete)
+        print(str)
     sock.close() # close socket
 # exec
-    run()
+    getData()

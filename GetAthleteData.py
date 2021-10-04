@@ -3,37 +3,42 @@ import requests
 import json
 
 # Constants
-HEADER = {'Ocp-Apim-Subscription-Key': 'd50772ff30a14c91b08b1f7b7f59de5d'}
+apiKey = ""
+HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2020'
-HOST = '146.59.10.118'
+HOST = 'localhost'
 PORT = 9009
 
-def getData():
-    response = requests.get(SDIO_URL, headers=HEADER)
-    theData = response.json()
-    return theData
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
 
-def priceCalculation(athlete_data):
+def getTheData():
+        httpResponse = requests.get(SDIO_URL, headers=HEADER)
+        theData = httpResponse.json()
+        return theData
+
+def computePrice(athlete_data):
         # Football Athletes
-        computedAmericanFootballPrice = athlete_data['FantasyPoints'] / ((athlete_data['OffensiveSnapsPlayed']) or athlete_data['DefensiveSnapsPlayed'])
+        numerator = athlete_data['FantasyPoints']
+        denominator = athlete_data['OffensiveSnapsPlayed'] or athlete_data['DefensiveSnapsPlayed']
+        if denominator == 0.0:
+                denominator = 1.0        
+        else:
+                pass
+
+        computedAmericanFootballPrice = numerator / denominator
         return computedAmericanFootballPrice
 
 def run():
-    # Define the socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
-    sock.connect((HOST, PORT)) # connect to socket
-    # Loop the entire json
-    ListOfAthletes = getData()
+        # Define the socket
+        # sock.connect((HOST, PORT)) # connect to socket
+        fd, addr = sock.accept()
+        # Loop the entire json
+        ListOfAthletes = getTheData()
+        print(addr)
+        for athlete in ListOfAthletes:
+                footballAthlete = "nfl,name=" + str(athlete["Name"]) + ",playerID=" + str(athlete["PlayerID"]) + " price=" + str(computePrice(athlete)) + "\n"
+                fd.sendall((footballAthlete).encode())
+        
+        fd.close() # close socket
 
-    for athlete in ListOfAthletes:
-        try: # find potential errors
-            athleteString = f'nfl,name={athlete["Name"]},playerID={athlete["PlayerID"]} price={priceCalculation(athlete)}'
-            try:
-                sock.sendall((athleteString).encode())
-            except socket.error as e:
-                print("Got error: %s" % (e))
-        except: # print names of athletes not available
-            print(athleteString)
-    sock.close() # close socket
-# exec
 run()

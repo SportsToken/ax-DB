@@ -31,14 +31,13 @@ def computePrice(athlete_data):
 def run():
         # Define the socket
         # sock.connect((HOST, PORT)) # connect to socket
-        fd, addr = sock.accept()
         # Loop the entire json
         ListOfAthletes = getTheData()
-        print(addr)
         for athlete in ListOfAthletes:
                 footballAthlete = "nfl,name=" + str(athlete["Name"]) + ",playerID=" + str(athlete["PlayerID"]) + " price=" + str(computePrice(athlete)) + "\n"
-                fd.sendall((footballAthlete).encode())
+                print(footballAthlete)
+                sock.sendall((footballAthlete).encode())
         
-        fd.close() # close socket
+        sock.close() # close socket
 
 run()

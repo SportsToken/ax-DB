@@ -37,7 +37,7 @@ def run():
                 footballAthlete = "nfl,name=" + str(athlete["Name"]) + ",playerID=" + str(athlete["PlayerID"]) + " price=" + str(computePrice(athlete)) + "\n"
                 print(footballAthlete)
                 sock.sendall((footballAthlete).encode())
-        
+
         sock.close() # close socket
 
 run()

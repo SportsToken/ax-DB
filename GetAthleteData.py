@@ -6,7 +6,8 @@ import json
 apiKey = "3c343fadd6a5464897fdfcc5db72a8a3"
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2020'
-HOST = 'localhost'
+
+HOST = '146.59.10.118'
 PORT = 9009
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -28,8 +29,6 @@ def computePrice(athlete_data):
         computedAmericanFootballPrice = numerator / denominator
         return computedAmericanFootballPrice
 
-HOST = '146.59.10.118'
-PORT = 9009
 # For UDP, change socket.SOCK_STREAM to socket.SOCK_DGRAM
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

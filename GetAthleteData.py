@@ -27,6 +27,9 @@ def computePrice(athlete_data):
                 pass
 
         computedAmericanFootballPrice = numerator / denominator
+        if (computedAmericanFootballPrice < 0):
+                computedAmericanFootballPrice = 0
+        
         return computedAmericanFootballPrice
 
 # For UDP, change socket.SOCK_STREAM to socket.SOCK_DGRAM
@@ -39,6 +42,7 @@ try:
         price = computePrice(athlete)
         name = athlete['Name']
         team = athlete['Team']
+        playerID = athlete['PlayerID']
         position = athlete['Position']
         passingYards = athlete['PassingYards']
         passingTouch = athlete['PassingTouchdowns']

@@ -40,6 +40,7 @@ try:
   ListOfAthletes = getTheData()
   for athlete in ListOfAthletes:
         price = computePrice(athlete)
+        id = athlete['Id']
         name = athlete['Name']
         team = athlete['Team']
         playerID = athlete['PlayerID']
@@ -52,7 +53,7 @@ try:
         rushingYards = athlete['RushingYards']
         # rushingTouch = athlete['RushingTouch']
 
-        sock.sendall((f'nfl,name={name},team={team},position={position},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards} price={price}\n').encode())
+        sock.sendall((f'nfl,name={name},id={id},team={team},position={position},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards} price={price}\n').encode())
 except socket.error as e:
   print("Got error: %s" % (e))
 

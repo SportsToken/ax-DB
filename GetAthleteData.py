@@ -5,7 +5,7 @@ import json
 # Constants
 apiKey = ""
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
-SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2020'
+SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2021'
 
 HOST = ''
 PORT = 9009

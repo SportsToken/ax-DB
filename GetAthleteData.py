@@ -3,11 +3,11 @@ import requests
 import json
 
 # Constants
-apiKey = ""
+apiKey = "fce302227be04c81b9830000132c52c8"
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2021'
 
-HOST = ''
+HOST = '54.38.139.134'
 PORT = 9009
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -40,10 +40,9 @@ try:
   ListOfAthletes = getTheData()
   for athlete in ListOfAthletes:
         price = computePrice(athlete)
-        id = athlete['Id']
+        id = athlete['PlayerID']
         name = athlete['Name']
         team = athlete['Team']
-        playerID = athlete['PlayerID']
         position = athlete['Position']
         passingYards = athlete['PassingYards']
         passingTouch = athlete['PassingTouchdowns']

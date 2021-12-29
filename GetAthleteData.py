@@ -1,13 +1,14 @@
+import os
 import socket
 import requests
 import json
 
 # Constants
-apiKey = "fce302227be04c81b9830000132c52c8"
+apiKey = os.environ['SPD_API']
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2021'
 
-HOST = '54.38.139.134'
+HOST = os.environ['QUEST-HOST']
 PORT = 9009
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -50,8 +51,8 @@ try:
         receiveYards = athlete['ReceivingYards']
         receiveTouch = athlete['ReceivingTouchdowns']
         rushingYards = athlete['RushingYards']
-        OffensiveSnapsPlayed = athlete_data['OffensiveSnapsPlayed']
-        DefensiveSnapsPlayed = athlete_data['DefensiveSnapsPlayed']
+        OffensiveSnapsPlayed = athlete['OffensiveSnapsPlayed']
+        DefensiveSnapsPlayed = athlete['DefensiveSnapsPlayed']
         # rushingTouch = athlete['RushingTouch']
 
         sock.sendall((f'nfl,name={name},id={id},team={team},position={position},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed}  price={price}\n').encode())

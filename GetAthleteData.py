@@ -4,11 +4,11 @@ import requests
 import json
 
 # Constants
-apiKey = os.environ['SPD_API']
+apiKey = ''
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2021'
 
-HOST = os.environ['QUEST-HOST']
+HOST = ''
 PORT = 9009
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -55,7 +55,7 @@ try:
         DefensiveSnapsPlayed = athlete['DefensiveSnapsPlayed']
         # rushingTouch = athlete['RushingTouch']
 
-        sock.sendall((f'nfl,name={name},id={id},team={team},position={position},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed}  price={price}\n').encode())
+        sock.sendall((f'nfl,name={name},id={id},team={team},position={position} passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed},price={price}\n').encode())
 except socket.error as e:
   print("Got error: %s" % (e))
 

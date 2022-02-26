@@ -3,12 +3,16 @@ import socket
 import requests
 import json
 
+from dotenv import load_dotenv   
+load_dotenv()                    
+
+
 # Constants
-apiKey = ''
+apiKey = os.environ.get("API_KEY")
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2021'
 
-HOST = ''
+HOST = '139.99.74.201'
 PORT = 9009
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -53,9 +57,12 @@ try:
         rushingYards = athlete['RushingYards']
         OffensiveSnapsPlayed = athlete['OffensiveSnapsPlayed']
         DefensiveSnapsPlayed = athlete['DefensiveSnapsPlayed']
-        # rushingTouch = athlete['RushingTouch']
+        Touchdowns = athlete['Touchdowns']
+        PassingInterceptions = athlete['PassingInterceptions']
+        FumblesLost = athlete['FumblesLost']
+        RushingTouchdowns = athlete['RushingTouchdowns']
 
-        sock.sendall((f'nfl,name={name},id={id},team={team},position={position} passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed},price={price}\n').encode())
+        sock.sendall((f'nfl,name={name},id={id},team={team},position={position} Touchdowns={Touchdowns},PassingInterceptions={PassingInterceptions},FumblesLost={FumblesLost},RushingTouchdowns={RushingTouchdowns},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed},price={price}\n').encode())
 except socket.error as e:
   print("Got error: %s" % (e))
 

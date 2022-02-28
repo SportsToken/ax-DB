@@ -62,7 +62,7 @@ try:
         FumblesLost = athlete['FumblesLost']
         RushingTouchdowns = athlete['RushingTouchdowns']
 
-        sock.sendall((f'nfl,name={name},id={id},team={team},position={position} Touchdowns={Touchdowns},PassingInterceptions={PassingInterceptions},FumblesLost={FumblesLost},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed},price={price}\n').encode())
+        sock.sendall((f'nfl,name={name},id={id},team={team},position={position} Touchdowns={Touchdowns},PassingInterceptions={PassingInterceptions},FumblesLost={FumblesLost},RushingTouchdowns={RushingTouchdowns},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed},price={price}\n').encode())
 except socket.error as e:
   print("Got error: %s" % (e))
 

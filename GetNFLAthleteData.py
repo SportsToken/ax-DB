@@ -27,9 +27,9 @@ def computePrice(athlete_data):
         rushingTouchdowns = athlete_data['RushingTouchDowns'] * 6
         receivingTouchdowns = athlete_data['ReceivingTouchDowns'] * 6
         passTD = athlete_data['PassingTouchdowns'] * 4
-        reception = athlete_data['Receptions'] * 5
-        passingIntercept = athlete_data['PassingInterceptions'] * 2
-        fumblesLost = athlete_data['FumblesLost'] * 2
+        reception = athlete_data['Receptions'] * 0.5
+        passingIntercept = athlete_data['PassingInterceptions'] * 2 * -1
+        fumblesLost = athlete_data['FumblesLost'] * 2 * -1
 
         # Football Athletes
         numerator = passingYards + rushingYards + receiveYards + rushingTouchdowns + receivingTouchdowns + passTD + reception + passingIntercept + fumblesLost

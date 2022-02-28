@@ -3,14 +3,10 @@ import socket
 import requests
 import json
 
-from dotenv import load_dotenv   
-load_dotenv()                    
-
-
 # Constants
-apiKey = os.environ.get("API_KEY")
+apiKey = ''
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
-SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2021'
+SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2022'
 
 HOST = '139.99.74.201'
 PORT = 9009
@@ -23,8 +19,20 @@ def getTheData():
         return theData
 
 def computePrice(athlete_data):
+        
+        #Variables
+        passingYards = athlete_data['PassingYards'] / 25
+        rushingYards = athlete_data['RushingYards'] / 10
+        receivingYards = athlete_data['ReceivingYards'] / 10
+        rushingTouchdowns = athlete_data['RushingTouchDowns'] * 6
+        receivingTouchdowns = athlete_data['ReceivingTouchDowns'] * 6
+        passTD = athlete_data['PassingTouchdowns'] * 4
+        reception = athlete_data['Receptions'] * 0.5
+        passingIntercept = athlete_data['PassingInterceptions'] * 2 * -1
+        fumblesLost = athlete_data['FumblesLost'] * 2 * -1
+
         # Football Athletes
-        numerator = athlete_data['FantasyPoints']
+        numerator = passingYards + rushingYards + receiveYards + rushingTouchdowns + receivingTouchdowns + passTD + reception + passingIntercept + fumblesLost
         denominator = athlete_data['OffensiveSnapsPlayed'] or athlete_data['DefensiveSnapsPlayed']
         if denominator == 0.0:
                 denominator = 1.0        
@@ -57,12 +65,9 @@ try:
         rushingYards = athlete['RushingYards']
         OffensiveSnapsPlayed = athlete['OffensiveSnapsPlayed']
         DefensiveSnapsPlayed = athlete['DefensiveSnapsPlayed']
-        Touchdowns = athlete['Touchdowns']
-        PassingInterceptions = athlete['PassingInterceptions']
-        FumblesLost = athlete['FumblesLost']
-        RushingTouchdowns = athlete['RushingTouchdowns']
+        # rushingTouch = athlete['RushingTouch']
 
-        sock.sendall((f'nfl,name={name},id={id},team={team},position={position} Touchdowns={Touchdowns},PassingInterceptions={PassingInterceptions},FumblesLost={FumblesLost},passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed},price={price}\n').encode())
+        sock.sendall((f'nfl,name={name},id={id},team={team},position={position} passingYards={passingYards},passingTouchdowns={passingTouch},reception={reception},receiveYards={receiveYards},receiveTouch={receiveTouch},rushingYards={rushingYards},OffensiveSnapsPlayed={OffensiveSnapsPlayed},DefensiveSnapsPlayed={DefensiveSnapsPlayed},price={price}\n').encode())
 except socket.error as e:
   print("Got error: %s" % (e))
 

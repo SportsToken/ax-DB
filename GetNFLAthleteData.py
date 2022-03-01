@@ -3,8 +3,12 @@ import socket
 import requests
 import json
 
+from dotenv import load_dotenv   
+load_dotenv()                    
+
+
 # Constants
-apiKey = ''
+apiKey = os.environ.get("API_KEY")
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2022'
 

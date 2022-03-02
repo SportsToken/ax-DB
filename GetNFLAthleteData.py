@@ -4,7 +4,7 @@ import requests
 import json
 
 # Constants
-apiKey = ''
+apiKey = os.environ.get("NFL_API_KEY")
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/nfl/stats/json/PlayerSeasonStats/2021'
 

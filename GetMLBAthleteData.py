@@ -1,7 +1,8 @@
 import os
+import json
 import socket
 import requests
-import json
+import unicodedata
 
 from dotenv import load_dotenv   
 load_dotenv()                    
@@ -34,11 +35,22 @@ def computePrice(athlete_data):
         # if (computedMajorLeagueBaseballPrice < 0):
         #         computedMajorLeagueBaseballPrice = 0
         
-        # return computedMajorLeagueBaseballPrice
-        return 0
+        return computedMajorLeagueBaseballPrice
+
 
 def computeWOBP(athlete_list):
         average = athlete_list
+
+def strip_accents(s):
+   return ''.join(c for c in unicodedata.normalize('NFD', s)
+                  if unicodedata.category(c) != 'Mn')
+
+def parseName(nameString):
+        newString = nameString.replace(" ", "\ ")
+        newString = strip_accents(newString)
+        return newString
+
+
 
 # For UDP, change socket.SOCK_STREAM to socket.SOCK_DGRAM
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -49,8 +61,8 @@ try:
   for athlete in ListOfAthletes:
         price = computePrice(athlete)
         IgWeightedOnBasePercentage = computeWOBP(ListOfAthletes)
+        name = parseName(athlete['Name'])
         id = athlete['PlayerID']
-        name = athlete['Name']
         team = athlete['Team']
         position = athlete['Position']
         Started = athlete['Started']
@@ -75,9 +87,8 @@ try:
         PitchingRuns = athlete['PitchingRuns']
         StolenBases = athlete['StolenBases']
         PlateAppearances = athlete['PlateAppearances']
- 
+        sock.sendall((f'mlb3,name={name},id={id},team={team},position={position} Started={Started},Games={Games},AtBats={AtBats},Runs={Runs},Singles={Singles},Doubles={Doubles},Triples={Triples},HomeRuns={HomeRuns},InningsPlayed={InningsPlayed},BattingAverage={BattingAverage},Outs={Outs},Walks={Walks},Errors={Errors},PlateAppearances={PlateAppearances},WeightedOnBasePercentage={WeightedOnBasePercentage},Saves={Saves},Strikeouts={Strikeouts},StolenBases={StolenBases},price={price}\n').encode())
 
-        sock.sendall((f'mlb,name={name},id={id},team={team},position={position} Started={Started},Games={Games},AtBats={AtBats},Runs={Runs},Singles={Singles},Doubles={Doubles},Triples={Triples},HomeRuns={HomeRuns},InningsPlayed={InningsPlayed},BattingAverage={BattingAverage},Outs={Outs},Walks={Walks},Errors={Errors},PlateAppearances={PlateAppearances},WeightedOnBasePercentage={WeightedOnBasePercentage},Saves={Saves},Strikeouts={Strikeouts},StolenBases={StolenBases},price={price}\n').encode())
 except socket.error as e:
   print("Got error: %s" % (e))
 

@@ -23,18 +23,18 @@ def getTheData():
         return theData
 
 def computePrice(athlete_data):
-        # Baseball Athletes
-        # numerator = athlete_data['FantasyPoints']
-        # denominator = athlete_data['OffensiveSnapsPlayed'] or athlete_data['DefensiveSnapsPlayed']
-        # if denominator == 0.0:
-        #         denominator = 1.0        
-        # else:
-        #         pass
+        # Static Variables
+        avg50yrRPW = 9.757
+        collateralizationMultiplier = 1000
+        BattingRuns = (((athlete_data['PlateAppearances']) * (athlete_data['WeightedOnBasePercentage'] - #lgweightedOnBase% )) / 1.25)
+        BaseRunningRuns = (athlete_data['StolenBases'] * 0.2)
+        FieldingRuns = ((athlete_data['Errors'] * (-10)) / (athlete_data['Games'] * 9 ))
+        PositonalAdjustment = (athlete_data['Games'] * 9 ) * #PositionalAdjustment / 1458
+        ReplacementRuns = (athlete_data['PlateAppearances'] * 5561.49) / #lgPlateAppearances
 
-        # computedMajorLeagueBaseballPrice = numerator / denominator
-        # if (computedMajorLeagueBaseballPrice < 0):
-        #         computedMajorLeagueBaseballPrice = 0
-        
+        statsNumerator = BattingRuns + BaseRunningRuns + FieldingRuns + PositonalAdjustment + ReplacementRuns
+        WAR = statsNumerator / avg50yrRPW
+        computedMajorLeagueBaseballPrice = WAR * collateralizationMultiplier
         return computedMajorLeagueBaseballPrice
 
 
@@ -87,7 +87,7 @@ try:
         PitchingRuns = athlete['PitchingRuns']
         StolenBases = athlete['StolenBases']
         PlateAppearances = athlete['PlateAppearances']
-        sock.sendall((f'mlb3,name={name},id={id},team={team},position={position} Started={Started},Games={Games},AtBats={AtBats},Runs={Runs},Singles={Singles},Doubles={Doubles},Triples={Triples},HomeRuns={HomeRuns},InningsPlayed={InningsPlayed},BattingAverage={BattingAverage},Outs={Outs},Walks={Walks},Errors={Errors},PlateAppearances={PlateAppearances},WeightedOnBasePercentage={WeightedOnBasePercentage},Saves={Saves},Strikeouts={Strikeouts},StolenBases={StolenBases},price={price}\n').encode())
+        sock.sendall((f'mlb,name={name},id={id},team={team},position={position} Started={Started},Games={Games},AtBats={AtBats},Runs={Runs},Singles={Singles},Doubles={Doubles},Triples={Triples},HomeRuns={HomeRuns},InningsPlayed={InningsPlayed},BattingAverage={BattingAverage},Outs={Outs},Walks={Walks},Errors={Errors},PlateAppearances={PlateAppearances},WeightedOnBasePercentage={WeightedOnBasePercentage},Saves={Saves},Strikeouts={Strikeouts},StolenBases={StolenBases},price={price}\n').encode())
 
 except socket.error as e:
   print("Got error: %s" % (e))

@@ -23,19 +23,28 @@ def getTheData():
 
 def computePrice(athlete_data):
         # Baseball Athletes
-        # numerator = athlete_data['FantasyPoints']
-        # denominator = athlete_data['OffensiveSnapsPlayed'] or athlete_data['DefensiveSnapsPlayed']
-        # if denominator == 0.0:
-        #         denominator = 1.0        
-        # else:
-        #         pass
+        innings_played = athlete_data['Games'] * 9.0
+        position_adj = {
+                "C": 12.5,
+                "1B": -12.5,
+                "2B": 2.5,
+                "SS": 7.5,
+                "3B": 2.5,
+                "LF": -7.5,
+                "CF": 2.5,
+                "RF": -7.5,
+                "DH": -17.5
+        }
 
-        # computedMajorLeagueBaseballPrice = numerator / denominator
-        # if (computedMajorLeagueBaseballPrice < 0):
-        #         computedMajorLeagueBaseballPrice = 0
-        
-        # return computedMajorLeagueBaseballPrice
-        return 0
+        # batting runs needs lgWeighedOnBase!!!!!!!!!
+        #batting_runs = athlete_data['PlateAppearances'] * (athlete['WeightedOnBasePercentage'] - )
+        base_running_runs = athlete_data['StolenBases'] ** 0.2
+        fielding_runs = -10 * athlete_data['Errors'] / innings_played
+        # need adjustment
+        #run_positional_adjustment = innings_played * adjustment / 1458
+        # need lgPlateAppearances!!!!!!!!!!!!!!!!!!!
+        #replacement_runs = 5561.49 * athlete_data['PlateAppearances'] / 
+        return (batting_runs + base_running_runs + fielding_runs + run_positional_adjustment + replacement_runs) / 9.757
 
 def computeWOBP(athlete_list):
         average = athlete_list

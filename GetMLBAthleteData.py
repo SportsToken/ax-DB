@@ -37,17 +37,16 @@ def computePrice(athlete_data):
         }
 
         # batting runs needs lgWeighedOnBase!!!!!!!!!
-        #batting_runs = athlete_data['PlateAppearances'] * (athlete['WeightedOnBasePercentage'] - )
+        #batting_runs = athlete_data['PlateAppearances'] * (athlete_data['WeightedOnBasePercentage'] - )
         base_running_runs = athlete_data['StolenBases'] ** 0.2
         fielding_runs = -10 * athlete_data['Errors'] / innings_played
-        # need adjustment
-        #run_positional_adjustment = innings_played * adjustment / 1458
+        run_positional_adjustment = innings_played * position_adj[athlete_data['Position']] / 1458
         # need lgPlateAppearances!!!!!!!!!!!!!!!!!!!
         #replacement_runs = 5561.49 * athlete_data['PlateAppearances'] / 
         return (batting_runs + base_running_runs + fielding_runs + run_positional_adjustment + replacement_runs) / 9.757
 
 def computeWOBP(athlete_list):
-        average = athlete_list
+        #return sum(WeightedOnBasePercentage) / len(athlete_list)
 
 # For UDP, change socket.SOCK_STREAM to socket.SOCK_DGRAM
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -84,7 +83,9 @@ try:
         PitchingRuns = athlete['PitchingRuns']
         StolenBases = athlete['StolenBases']
         PlateAppearances = athlete['PlateAppearances']
- 
+
+  for athlete in ListOfAthletes:
+          
 
         sock.sendall((f'mlb,name={name},id={id},team={team},position={position} Started={Started},Games={Games},AtBats={AtBats},Runs={Runs},Singles={Singles},Doubles={Doubles},Triples={Triples},HomeRuns={HomeRuns},InningsPlayed={InningsPlayed},BattingAverage={BattingAverage},Outs={Outs},Walks={Walks},Errors={Errors},PlateAppearances={PlateAppearances},WeightedOnBasePercentage={WeightedOnBasePercentage},Saves={Saves},Strikeouts={Strikeouts},StolenBases={StolenBases},price={price}\n').encode())
 except socket.error as e:

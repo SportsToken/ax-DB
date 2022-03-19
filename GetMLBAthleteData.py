@@ -22,15 +22,27 @@ def getTheData():
         theData = httpResponse.json()
         return theData
 
-def computePrice(athlete_data):
+def computePrice(athlete_data, lgweightedOnBase, sumPlateAppearances):
         # Static Variables
+        PositionalAdjustment = {
+                'C': 12.5,
+                '1B': -12.5,
+                '2B': 2.5,
+                'SS': 7.5,
+                '3B': 2.5,
+                'LF': -7.5,
+                'CF': 2.5,
+                'RF': -7.5,
+                'DH': -17.5
+        }
+
         avg50yrRPW = 9.757
         collateralizationMultiplier = 1000
-        BattingRuns = (((athlete_data['PlateAppearances']) * (athlete_data['WeightedOnBasePercentage'] - #lgweightedOnBase% )) / 1.25)
+        BattingRuns = (((athlete_data['PlateAppearances']) * (athlete_data['WeightedOnBasePercentage'] - lgweightedOnBase)) / 1.25)
         BaseRunningRuns = (athlete_data['StolenBases'] * 0.2)
         FieldingRuns = ((athlete_data['Errors'] * (-10)) / (athlete_data['Games'] * 9 ))
-        PositonalAdjustment = (athlete_data['Games'] * 9 ) * #PositionalAdjustment / 1458
-        ReplacementRuns = (athlete_data['PlateAppearances'] * 5561.49) / #lgPlateAppearances
+        PositonalAdjustment = (athlete_data['Games'] * 9 ) * PositionalAdjustment[athlete_data['Position']] / 1458
+        ReplacementRuns = (athlete_data['PlateAppearances'] * 5561.49) / sumPlateAppearances
 
         statsNumerator = BattingRuns + BaseRunningRuns + FieldingRuns + PositonalAdjustment + ReplacementRuns
         WAR = statsNumerator / avg50yrRPW
@@ -58,9 +70,17 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
   sock.connect((HOST, PORT))
   ListOfAthletes = getTheData()
+  lgWeighedOnBase = 0
+  sumPlateAppearances = 0
   for athlete in ListOfAthletes:
-        price = computePrice(athlete)
-        IgWeightedOnBasePercentage = computeWOBP(ListOfAthletes)
+        if (PlateAppearances > 0)
+                lgWeighedOnBase += WeightedOnBasePercentage
+        sumPlateAppearances += PlateAppearances
+
+  lgWeighedOnBase /= len(ListOfAthletes)
+  for athlete in ListOfAthletes:
+        price = computePrice(athlete, lgWeighedOnBase, sumPlateAppearances)
+        #IgWeightedOnBasePercentage = computeWOBP(ListOfAthletes)
         name = parseName(athlete['Name'])
         id = athlete['PlayerID']
         team = athlete['Team']

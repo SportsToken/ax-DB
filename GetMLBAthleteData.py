@@ -12,7 +12,8 @@ apiKey = os.environ.get("MLB_API_KEY")
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/mlb/stats/json/PlayerSeasonStats/2021'
 
-HOST = '139.99.74.201'
+HOST = 'localhost'
+# HOST = '139.99.74.201
 PORT = 9009
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -24,7 +25,7 @@ def getTheData():
 
 def computePrice(athlete_data, lgweightedOnBase, sumPlateAppearances):
         # Static Variables
-        PositionalAdjustment = {
+        position_adj = {
                 'C': 12.5,
                 '1B': -12.5,
                 '2B': 2.5,
@@ -41,7 +42,7 @@ def computePrice(athlete_data, lgweightedOnBase, sumPlateAppearances):
         BattingRuns = (((athlete_data['PlateAppearances']) * (athlete_data['WeightedOnBasePercentage'] - lgweightedOnBase)) / 1.25)
         BaseRunningRuns = (athlete_data['StolenBases'] * 0.2)
         FieldingRuns = ((athlete_data['Errors'] * (-10)) / (athlete_data['Games'] * 9 ))
-        PositonalAdjustment = (athlete_data['Games'] * 9 ) * PositionalAdjustment[athlete_data['Position']] / 1458
+        PositonalAdjustment = (athlete_data['Games'] * 9 ) * position_adj.setdefault(athlete_data['Position'], 0) / 1458
         ReplacementRuns = (athlete_data['PlateAppearances'] * 5561.49) / sumPlateAppearances
 
         statsNumerator = BattingRuns + BaseRunningRuns + FieldingRuns + PositonalAdjustment + ReplacementRuns
@@ -73,11 +74,14 @@ try:
   lgWeighedOnBase = 0
   sumPlateAppearances = 0
   for athlete in ListOfAthletes:
-        if (PlateAppearances > 0)
-                lgWeighedOnBase += WeightedOnBasePercentage
-        sumPlateAppearances += PlateAppearances
+        if athlete['PlateAppearances'] > 0:
+                lgWeighedOnBase += athlete['WeightedOnBasePercentage']
+        sumPlateAppearances += athlete['PlateAppearances']
 
   lgWeighedOnBase /= len(ListOfAthletes)
+  print(sumPlateAppearances)
+  print(lgWeighedOnBase)
+
   for athlete in ListOfAthletes:
         price = computePrice(athlete, lgWeighedOnBase, sumPlateAppearances)
         #IgWeightedOnBasePercentage = computeWOBP(ListOfAthletes)

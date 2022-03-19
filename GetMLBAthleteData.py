@@ -4,7 +4,7 @@ import requests
 import json
 
 from dotenv import load_dotenv   
-load_dotenv()                    
+load_dotenv()
 
 # Constants
 apiKey = os.environ.get("MLB_API_KEY")
@@ -21,7 +21,7 @@ def getTheData():
         theData = httpResponse.json()
         return theData
 
-def computePrice(athlete_data, lgWeighedOnBase, lgPlateAppearances):
+def computePrice(athlete_data, lgWeighedOnBase, sumPlateAppearances):
         # Baseball Athletes
         innings_played = athlete_data['Games'] * 9.0
         position_adj = {
@@ -40,7 +40,7 @@ def computePrice(athlete_data, lgWeighedOnBase, lgPlateAppearances):
         base_running_runs = athlete_data['StolenBases'] ** 0.2
         fielding_runs = -10 * athlete_data['Errors'] / innings_played
         run_positional_adjustment = innings_played * position_adj[athlete_data['Position']] / 1458
-        replacement_runs = 5561.49 * athlete_data['PlateAppearances'] / lgPlateAppearances
+        replacement_runs = 5561.49 * athlete_data['PlateAppearances'] / sumPlateAppearances
         return (batting_runs + base_running_runs + fielding_runs + run_positional_adjustment + replacement_runs) / 9.757
 
 # For UDP, change socket.SOCK_STREAM to socket.SOCK_DGRAM
@@ -50,7 +50,7 @@ try:
         sock.connect((HOST, PORT))
         ListOfAthletes = getTheData()
         lgWeighedOnBase = 0
-        lgPlateAppearances = 0
+        sumPlateAppearances = 0
         for athlete in ListOfAthletes:
                 id = athlete['PlayerID']
                 name = athlete['Name']
@@ -79,12 +79,13 @@ try:
                 StolenBases = athlete['StolenBases']
                 PlateAppearances = athlete['PlateAppearances']
                 lgWeighedOnBase += WeightedOnBasePercentage
-                lgPlateAppearances += PlateAppearances
+                sumPlateAppearances += PlateAppearances
 
-        lgWeighedOnBase /= len(ListOfAthletes)
-        lgPlateAppearances /= len(ListOfAthletes)
+        # league average (only players with plate appearences)
+        if (PlateAppearances > 0)
+                lgWeighedOnBase /= len(ListOfAthletes)
         for athlete in ListOfAthletes:
-                price = computePrice(athlete, lgWeighedOnBase, lgPlateAppearances)
+                price = computePrice(athlete, lgWeighedOnBase, sumPlateAppearances)
           
 
         sock.sendall((f'mlb,name={name},id={id},team={team},position={position} Started={Started},Games={Games},AtBats={AtBats},Runs={Runs},Singles={Singles},Doubles={Doubles},Triples={Triples},HomeRuns={HomeRuns},InningsPlayed={InningsPlayed},BattingAverage={BattingAverage},Outs={Outs},Walks={Walks},Errors={Errors},PlateAppearances={PlateAppearances},WeightedOnBasePercentage={WeightedOnBasePercentage},Saves={Saves},Strikeouts={Strikeouts},StolenBases={StolenBases},price={price}\n').encode())

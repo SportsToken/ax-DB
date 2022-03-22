@@ -12,8 +12,8 @@ apiKey = os.environ.get("MLB_API_KEY")
 HEADER = {'Ocp-Apim-Subscription-Key': apiKey }
 SDIO_URL = 'https://api.sportsdata.io/v3/mlb/stats/json/PlayerSeasonStats/2021'
 
-HOST = 'localhost'
-# HOST = '139.99.74.201
+# HOST = 'localhost'
+HOST = '139.99.74.201'
 PORT = 9009
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # define socket
@@ -37,6 +37,7 @@ def computePrice(athlete_data, lgweightedOnBase, sumPlateAppearances):
                 'DH': -17.5
         }
 
+        # Formula 
         avg50yrRPW = 9.757
         collateralizationMultiplier = 1000
         BattingRuns = (((athlete_data['PlateAppearances']) * (athlete_data['WeightedOnBasePercentage'] - lgweightedOnBase)) / 1.25)
@@ -45,6 +46,7 @@ def computePrice(athlete_data, lgweightedOnBase, sumPlateAppearances):
         PositonalAdjustment = (athlete_data['Games'] * 9 ) * position_adj.setdefault(athlete_data['Position'], 0) / 1458
         ReplacementRuns = (athlete_data['PlateAppearances'] * 5561.49) / sumPlateAppearances
 
+        # Formula Calculation
         statsNumerator = BattingRuns + BaseRunningRuns + FieldingRuns + PositonalAdjustment + ReplacementRuns
         WAR = statsNumerator / avg50yrRPW
         computedMajorLeagueBaseballPrice = WAR * collateralizationMultiplier
@@ -79,8 +81,6 @@ try:
         sumPlateAppearances += athlete['PlateAppearances']
 
   lgWeighedOnBase /= len(ListOfAthletes)
-  print(sumPlateAppearances)
-  print(lgWeighedOnBase)
 
   for athlete in ListOfAthletes:
         price = computePrice(athlete, lgWeighedOnBase, sumPlateAppearances)

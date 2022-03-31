@@ -39,7 +39,8 @@ def computePrice(athlete_data, lgweightedOnBase, sumPlateAppearances):
 
         # Formula 
         avg50yrRPW = 9.757
-        collateralizationMultiplier = 1000
+        # Note -- The collateralization multiplier is meant to scale the calculated WAR price, this may be needed in the future, or further down the stack
+        # collateralizationMultiplier = 1000
         BattingRuns = (((athlete_data['PlateAppearances']) * (athlete_data['WeightedOnBasePercentage'] - lgweightedOnBase)) / 1.25)
         BaseRunningRuns = (athlete_data['StolenBases'] * 0.2)
         FieldingRuns = ((athlete_data['Errors'] * (-10)) / (athlete_data['Games'] * 9 ))
@@ -49,7 +50,7 @@ def computePrice(athlete_data, lgweightedOnBase, sumPlateAppearances):
         # Formula Calculation
         statsNumerator = BattingRuns + BaseRunningRuns + FieldingRuns + PositonalAdjustment + ReplacementRuns
         WAR = statsNumerator / avg50yrRPW
-        computedMajorLeagueBaseballPrice = WAR * collateralizationMultiplier
+        computedMajorLeagueBaseballPrice = WAR # * collateralizationMultiplier
         return computedMajorLeagueBaseballPrice
 
 
